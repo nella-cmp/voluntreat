@@ -1,0 +1,1265 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
+import '/components/bottomnavbar_beef_widget.dart';
+import '/components/post_widget.dart';
+import '/flutter_flow/flutter_flow_icon_button.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
+import '/index.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import 'other_profile_model.dart';
+export 'other_profile_model.dart';
+
+class OtherProfileWidget extends StatefulWidget {
+  const OtherProfileWidget({
+    super.key,
+    required this.postProfile,
+  });
+
+  final DocumentReference? postProfile;
+
+  static String routeName = 'otherProfile';
+  static String routePath = 'otherProfile';
+
+  @override
+  State<OtherProfileWidget> createState() => _OtherProfileWidgetState();
+}
+
+class _OtherProfileWidgetState extends State<OtherProfileWidget> {
+  late OtherProfileModel _model;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => OtherProfileModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<UsersRecord>(
+      stream: UsersRecord.getDocument(widget!.postProfile!),
+      builder: (context, snapshot) {
+        // Customize what your widget looks like when it's loading.
+        if (!snapshot.hasData) {
+          return Scaffold(
+            backgroundColor: FlutterFlowTheme.of(context).primaryText,
+            body: Center(
+              child: LinearProgressIndicator(
+                color: FlutterFlowTheme.of(context).primary,
+              ),
+            ),
+          );
+        }
+
+        final otherProfileUsersRecord = snapshot.data!;
+
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: Scaffold(
+            key: scaffoldKey,
+            backgroundColor: FlutterFlowTheme.of(context).primaryText,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(60),
+              child: AppBar(
+                backgroundColor: FlutterFlowTheme.of(context).primary,
+                automaticallyImplyLeading: false,
+                leading: FlutterFlowIconButton(
+                  borderColor: Colors.transparent,
+                  borderRadius: 30,
+                  borderWidth: 1,
+                  buttonSize: 60,
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  onPressed: () async {
+                    context.pop();
+                  },
+                ),
+                title: Text(
+                  'Profile',
+                  style: FlutterFlowTheme.of(context).headlineMedium.override(
+                        fontFamily:
+                            FlutterFlowTheme.of(context).headlineMediumFamily,
+                        color: Colors.white,
+                        fontSize: 22,
+                        letterSpacing: 0.0,
+                        useGoogleFonts: GoogleFonts.asMap().containsKey(
+                            FlutterFlowTheme.of(context).headlineMediumFamily),
+                      ),
+                ),
+                actions: [],
+                centerTitle: true,
+                toolbarHeight: 60,
+                elevation: 2,
+              ),
+            ),
+            body: Stack(
+              children: [
+                Align(
+                  alignment: AlignmentDirectional(0, -1),
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    if (otherProfileUsersRecord
+                                            .followers.length >
+                                        0) {
+                                      context.pushNamed(
+                                        FollowersWidget.routeName,
+                                        queryParameters: {
+                                          'userRef': serializeParam(
+                                            otherProfileUsersRecord.reference,
+                                            ParamType.DocumentReference,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    } else {
+                                      return;
+                                    }
+                                  },
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 0, 12),
+                                        child: Text(
+                                          valueOrDefault<String>(
+                                            otherProfileUsersRecord
+                                                .followers.length
+                                                .toString(),
+                                            '3.2k',
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .headlineSmall
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineSmallFamily,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                useGoogleFonts: GoogleFonts
+                                                        .asMap()
+                                                    .containsKey(FlutterFlowTheme
+                                                            .of(context)
+                                                        .headlineSmallFamily),
+                                              ),
+                                        ),
+                                      ),
+                                      Text(
+                                        'Followers',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelMediumFamily,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .accent4,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts: GoogleFonts
+                                                      .asMap()
+                                                  .containsKey(
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .labelMediumFamily),
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    16, 0, 16, 0),
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        FlutterFlowTheme.of(context).primary,
+                                        FlutterFlowTheme.of(context).tertiary
+                                      ],
+                                      stops: [0, 1],
+                                      begin: AlignmentDirectional(1, -1),
+                                      end: AlignmentDirectional(-1, 1),
+                                    ),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Align(
+                                    alignment: AlignmentDirectional(0, 0),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(4),
+                                      child: Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(4),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Image.network(
+                                              valueOrDefault<String>(
+                                                otherProfileUsersRecord
+                                                    .photoUrl,
+                                                'https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/social-hobby-activity-tracker-template-app-786lm7/assets/na9frsqkd2vn/Asset_8-8.png',
+                                              ),
+                                              width: 100,
+                                              height: 100,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                child: InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    if (otherProfileUsersRecord
+                                            .following.length >
+                                        0) {
+                                      context.pushNamed(
+                                        FollowingWidget.routeName,
+                                        queryParameters: {
+                                          'userRef': serializeParam(
+                                            otherProfileUsersRecord.reference,
+                                            ParamType.DocumentReference,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    } else {
+                                      return;
+                                    }
+                                  },
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 0, 12),
+                                        child: Text(
+                                          valueOrDefault<String>(
+                                            otherProfileUsersRecord
+                                                .following.length
+                                                .toString(),
+                                            '397',
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          style: FlutterFlowTheme.of(context)
+                                              .headlineSmall
+                                              .override(
+                                                fontFamily:
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineSmallFamily,
+                                                color:
+                                                    FlutterFlowTheme.of(context)
+                                                        .secondaryText,
+                                                letterSpacing: 0.0,
+                                                fontWeight: FontWeight.w600,
+                                                useGoogleFonts: GoogleFonts
+                                                        .asMap()
+                                                    .containsKey(FlutterFlowTheme
+                                                            .of(context)
+                                                        .headlineSmallFamily),
+                                              ),
+                                        ),
+                                      ),
+                                      Text(
+                                        'Following',
+                                        textAlign: TextAlign.center,
+                                        style: FlutterFlowTheme.of(context)
+                                            .labelMedium
+                                            .override(
+                                              fontFamily:
+                                                  FlutterFlowTheme.of(context)
+                                                      .labelMediumFamily,
+                                              color:
+                                                  FlutterFlowTheme.of(context)
+                                                      .accent4,
+                                              letterSpacing: 0.0,
+                                              useGoogleFonts: GoogleFonts
+                                                      .asMap()
+                                                  .containsKey(
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .labelMediumFamily),
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            width: MediaQuery.sizeOf(context).width * 0.6,
+                            height: 50,
+                            decoration: BoxDecoration(),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                              child: Text(
+                                valueOrDefault<String>(
+                                  otherProfileUsersRecord.displayName,
+                                  'PampangaVet',
+                                ),
+                                textAlign: TextAlign.center,
+                                style: FlutterFlowTheme.of(context)
+                                    .headlineSmall
+                                    .override(
+                                      fontFamily: FlutterFlowTheme.of(context)
+                                          .headlineSmallFamily,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      letterSpacing: 0.0,
+                                      fontWeight: FontWeight.w600,
+                                      useGoogleFonts: GoogleFonts.asMap()
+                                          .containsKey(
+                                              FlutterFlowTheme.of(context)
+                                                  .headlineSmallFamily),
+                                    ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.sizeOf(context).width * 0.95,
+                            decoration: BoxDecoration(),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Align(
+                                    alignment: AlignmentDirectional(-1, 0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(-1, 0),
+                                          child: Text(
+                                            valueOrDefault<String>(
+                                              otherProfileUsersRecord
+                                                  .favouriteSteak,
+                                              'Pampanga, San Fernando, Sindalan',
+                                            ),
+                                            textAlign: TextAlign.start,
+                                            style: FlutterFlowTheme.of(context)
+                                                .labelSmall
+                                                .override(
+                                                  fontFamily:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .labelSmallFamily,
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryText,
+                                                  fontSize: 14,
+                                                  letterSpacing: 0.0,
+                                                  fontWeight: FontWeight.w500,
+                                                  useGoogleFonts: GoogleFonts
+                                                          .asMap()
+                                                      .containsKey(
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .labelSmallFamily),
+                                                ),
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment:
+                                              AlignmentDirectional(-1, 0),
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 12, 0, 0),
+                                            child: Text(
+                                              valueOrDefault<String>(
+                                                otherProfileUsersRecord.bio,
+                                                'Animal Safety <3',
+                                              ),
+                                              textAlign: TextAlign.start,
+                                              style:
+                                                  FlutterFlowTheme.of(context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMediumFamily,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondaryText,
+                                                        letterSpacing: 0.0,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .bodyMediumFamily),
+                                                      ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: AlignmentDirectional(0, -1),
+                                    child: Container(
+                                      width: 150,
+                                      decoration: BoxDecoration(),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            35, 0, 0, 0),
+                                        child:
+                                            StreamBuilder<List<LevelsRecord>>(
+                                          stream: queryLevelsRecord(
+                                            queryBuilder: (levelsRecord) =>
+                                                levelsRecord
+                                                    .where(
+                                                      'xp_required',
+                                                      isLessThanOrEqualTo:
+                                                          valueOrDefault<int>(
+                                                        otherProfileUsersRecord
+                                                            .lifetimeXp,
+                                                        0,
+                                                      ),
+                                                    )
+                                                    .orderBy('xp_required',
+                                                        descending: true),
+                                            singleRecord: true,
+                                          ),
+                                          builder: (context, snapshot) {
+                                            // Customize what your widget looks like when it's loading.
+                                            if (!snapshot.hasData) {
+                                              return Center(
+                                                child: LinearProgressIndicator(
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                ),
+                                              );
+                                            }
+                                            List<LevelsRecord>
+                                                columnLevelsRecordList =
+                                                snapshot.data!;
+                                            // Return an empty Container when the item does not exist.
+                                            if (snapshot.data!.isEmpty) {
+                                              return Container();
+                                            }
+                                            final columnLevelsRecord =
+                                                columnLevelsRecordList
+                                                        .isNotEmpty
+                                                    ? columnLevelsRecordList
+                                                        .first
+                                                    : null;
+
+                                            return Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          -1, -1),
+                                                  child: Text(
+                                                    'Level 13',
+                                                    style: FlutterFlowTheme.of(
+                                                            context)
+                                                        .titleSmall
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .titleSmallFamily,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          useGoogleFonts: GoogleFonts
+                                                                  .asMap()
+                                                              .containsKey(
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .titleSmallFamily),
+                                                        ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  valueOrDefault<String>(
+                                                    columnLevelsRecord?.title,
+                                                    'Volunteer Novice',
+                                                  ),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .titleSmall
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmallFamily,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .secondary,
+                                                        letterSpacing: 0.0,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmallFamily),
+                                                      ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(5, 0),
+                            child: Container(
+                              width: MediaQuery.sizeOf(context).width * 0.9,
+                              decoration: BoxDecoration(),
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          30, 0, 0, 0),
+                                      child: Stack(
+                                        children: [
+                                          if ((currentUserDocument?.following
+                                                          ?.toList() ??
+                                                      [])
+                                                  .contains(
+                                                      otherProfileUsersRecord
+                                                          .reference) ==
+                                              true)
+                                            AuthUserStreamWidget(
+                                              builder: (context) =>
+                                                  FFButtonWidget(
+                                                onPressed: () async {
+                                                  await otherProfileUsersRecord
+                                                      .reference
+                                                      .update({
+                                                    ...mapToFirestore(
+                                                      {
+                                                        'followers': FieldValue
+                                                            .arrayRemove([
+                                                          currentUserReference
+                                                        ]),
+                                                      },
+                                                    ),
+                                                  });
+
+                                                  await currentUserReference!
+                                                      .update({
+                                                    ...mapToFirestore(
+                                                      {
+                                                        'following': FieldValue
+                                                            .arrayRemove([
+                                                          otherProfileUsersRecord
+                                                              .reference
+                                                        ]),
+                                                      },
+                                                    ),
+                                                  });
+
+                                                  context.pushNamed(
+                                                      HomeWidget.routeName);
+
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        valueOrDefault<String>(
+                                                          'You unfollowed ${otherProfileUsersRecord.displayName}',
+                                                          'You unfollowed a user',
+                                                        ),
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+                                                },
+                                                text: 'Unfollow',
+                                                options: FFButtonOptions(
+                                                  width: 100,
+                                                  height: 30,
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(16, 0, 16, 0),
+                                                  iconPadding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(0, 0, 0, 0),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .secondaryBackground,
+                                                  textStyle: FlutterFlowTheme
+                                                          .of(context)
+                                                      .titleSmall
+                                                      .override(
+                                                        fontFamily:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleSmallFamily,
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        letterSpacing: 0.0,
+                                                        useGoogleFonts: GoogleFonts
+                                                                .asMap()
+                                                            .containsKey(
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmallFamily),
+                                                      ),
+                                                  elevation: 0,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                            ),
+                                          if ((currentUserDocument?.following
+                                                          ?.toList() ??
+                                                      [])
+                                                  .contains(
+                                                      otherProfileUsersRecord
+                                                          .reference) ==
+                                              false)
+                                            AuthUserStreamWidget(
+                                              builder: (context) =>
+                                                  FFButtonWidget(
+                                                onPressed: () async {
+                                                  await otherProfileUsersRecord
+                                                      .reference
+                                                      .update({
+                                                    ...mapToFirestore(
+                                                      {
+                                                        'followers': FieldValue
+                                                            .arrayUnion([
+                                                          currentUserReference
+                                                        ]),
+                                                      },
+                                                    ),
+                                                  });
+
+                                                  await currentUserReference!
+                                                      .update({
+                                                    ...mapToFirestore(
+                                                      {
+                                                        'following': FieldValue
+                                                            .arrayUnion([
+                                                          otherProfileUsersRecord
+                                                              .reference
+                                                        ]),
+                                                      },
+                                                    ),
+                                                  });
+
+                                                  context.pushNamed(
+                                                      HomeWidget.routeName);
+
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        valueOrDefault<String>(
+                                                          'You followed ${otherProfileUsersRecord.displayName} !',
+                                                          'You followed a user',
+                                                        ),
+                                                        style: TextStyle(
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .primaryText,
+                                                        ),
+                                                      ),
+                                                      duration: Duration(
+                                                          milliseconds: 4000),
+                                                      backgroundColor:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .secondary,
+                                                    ),
+                                                  );
+
+                                                  await NotificationsRecord
+                                                      .collection
+                                                      .doc()
+                                                      .set(
+                                                          createNotificationsRecordData(
+                                                        isALike: false,
+                                                        isRead: false,
+                                                        madeBy:
+                                                            currentUserReference,
+                                                        madeTo:
+                                                            otherProfileUsersRecord
+                                                                .reference,
+                                                        timeMade:
+                                                            getCurrentTimestamp,
+                                                        madeByDisplayName:
+                                                            currentUserDisplayName,
+                                                        madeByProfilePhoto:
+                                                            currentUserPhoto,
+                                                        notificationType:
+                                                            'follow',
+                                                      ));
+                                                },
+                                                text: 'Follow',
+                                                options: FFButtonOptions(
+                                                  width: 100,
+                                                  height: 30,
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(16, 0, 16, 0),
+                                                  iconPadding:
+                                                      EdgeInsetsDirectional
+                                                          .fromSTEB(0, 0, 0, 0),
+                                                  color: FlutterFlowTheme.of(
+                                                          context)
+                                                      .primary,
+                                                  textStyle:
+                                                      FlutterFlowTheme.of(
+                                                              context)
+                                                          .titleSmall
+                                                          .override(
+                                                            fontFamily:
+                                                                FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmallFamily,
+                                                            color: Colors.white,
+                                                            letterSpacing: 0.0,
+                                                            useGoogleFonts: GoogleFonts
+                                                                    .asMap()
+                                                                .containsKey(
+                                                                    FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .titleSmallFamily),
+                                                          ),
+                                                  elevation: 0,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(0, 0),
+                            child: Container(
+                              width: MediaQuery.sizeOf(context).width * 0.95,
+                              height: 200,
+                              decoration: BoxDecoration(),
+                              child: Padding(
+                                padding:
+                                    EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                                child: SingleChildScrollView(
+                                  primary: false,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Align(
+                                        alignment: AlignmentDirectional(0, -20),
+                                        child: Padding(
+                                          padding: EdgeInsets.all(16),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Lifetime Stats',
+                                                style:
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineMedium
+                                                        .override(
+                                                          fontFamily:
+                                                              FlutterFlowTheme.of(
+                                                                      context)
+                                                                  .headlineMediumFamily,
+                                                          color: FlutterFlowTheme
+                                                                  .of(context)
+                                                              .secondaryText,
+                                                          fontSize: 20,
+                                                          letterSpacing: 0.0,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          useGoogleFonts: GoogleFonts
+                                                                  .asMap()
+                                                              .containsKey(
+                                                                  FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .headlineMediumFamily),
+                                                        ),
+                                              ),
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Expanded(
+                                                    child: Container(
+                                                      width: 100,
+                                                      height: 100,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .secondaryBackground,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10),
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(5),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              'Activties',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyMediumFamily,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    useGoogleFonts: GoogleFonts
+                                                                            .asMap()
+                                                                        .containsKey(
+                                                                            FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                                  ),
+                                                            ),
+                                                            Flexible(
+                                                              child: Text(
+                                                                '104',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .displaySmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          FlutterFlowTheme.of(context)
+                                                                              .displaySmallFamily,
+                                                                      color: FlutterFlowTheme.of(
+                                                                              context)
+                                                                          .secondaryText,
+                                                                      letterSpacing:
+                                                                          0.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      useGoogleFonts: GoogleFonts
+                                                                              .asMap()
+                                                                          .containsKey(
+                                                                              FlutterFlowTheme.of(context).displaySmallFamily),
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: 10,
+                                                    height: 100,
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0x00FFFFFF),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      width: 100,
+                                                      height: 100,
+                                                      decoration: BoxDecoration(
+                                                        color: FlutterFlowTheme
+                                                                .of(context)
+                                                            .secondaryBackground,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10),
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(5),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              'Hours',
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .bodyMedium
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .bodyMediumFamily,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    useGoogleFonts: GoogleFonts
+                                                                            .asMap()
+                                                                        .containsKey(
+                                                                            FlutterFlowTheme.of(context).bodyMediumFamily),
+                                                                  ),
+                                                            ),
+                                                            Text(
+                                                              '78',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: FlutterFlowTheme
+                                                                      .of(context)
+                                                                  .displaySmall
+                                                                  .override(
+                                                                    fontFamily:
+                                                                        FlutterFlowTheme.of(context)
+                                                                            .displaySmallFamily,
+                                                                    color: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .secondaryText,
+                                                                    letterSpacing:
+                                                                        0.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    useGoogleFonts: GoogleFonts
+                                                                            .asMap()
+                                                                        .containsKey(
+                                                                            FlutterFlowTheme.of(context).displaySmallFamily),
+                                                                  ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: AlignmentDirectional(-1, 0),
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(18, 0, 0, 0),
+                              child: Container(
+                                width: MediaQuery.sizeOf(context).width * 0.25,
+                                height: 50,
+                                decoration: BoxDecoration(),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      0, 10, 0, 0),
+                                  child: Text(
+                                    'Posts',
+                                    style: FlutterFlowTheme.of(context)
+                                        .headlineMedium
+                                        .override(
+                                          fontFamily:
+                                              FlutterFlowTheme.of(context)
+                                                  .headlineMediumFamily,
+                                          color: FlutterFlowTheme.of(context)
+                                              .secondaryText,
+                                          fontSize: 20,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.w600,
+                                          useGoogleFonts: GoogleFonts.asMap()
+                                              .containsKey(
+                                                  FlutterFlowTheme.of(context)
+                                                      .headlineMediumFamily),
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          StreamBuilder<List<PostsRecord>>(
+                            stream: queryPostsRecord(
+                              queryBuilder: (postsRecord) => postsRecord
+                                  .where(
+                                    'post_user',
+                                    isEqualTo: widget!.postProfile,
+                                  )
+                                  .orderBy('time_posted', descending: true),
+                              limit: 5,
+                            ),
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: LinearProgressIndicator(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                  ),
+                                );
+                              }
+                              List<PostsRecord> postsfeedPostsRecordList =
+                                  snapshot.data!;
+                              if (postsfeedPostsRecordList.isEmpty) {
+                                return Image.asset(
+                                  'assets/images/like_button.png',
+                                );
+                              }
+
+                              return ListView.builder(
+                                padding: EdgeInsets.zero,
+                                primary: false,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: postsfeedPostsRecordList.length,
+                                itemBuilder: (context, postsfeedIndex) {
+                                  final postsfeedPostsRecord =
+                                      postsfeedPostsRecordList[postsfeedIndex];
+                                  return wrapWithModel(
+                                    model: _model.postModels.getModel(
+                                      postsfeedPostsRecord.reference.id,
+                                      postsfeedIndex,
+                                    ),
+                                    updateCallback: () => safeSetState(() {}),
+                                    child: PostWidget(
+                                      key: Key(
+                                        'Keybqt_${postsfeedPostsRecord.reference.id}',
+                                      ),
+                                      userPhotoRef:
+                                          postsfeedPostsRecord.postUser,
+                                      userDisplayNameRef:
+                                          postsfeedPostsRecord.postUser,
+                                      postCut: postsfeedPostsRecord.postCut,
+                                      postDoneness: valueOrDefault<String>(
+                                        postsfeedPostsRecord.postDoneness,
+                                        'Unknown doneness',
+                                      ),
+                                      postLocationName:
+                                          postsfeedPostsRecord.postLocationName,
+                                      postLocationCity: valueOrDefault<String>(
+                                        postsfeedPostsRecord.postLocationCity,
+                                        'London',
+                                      ),
+                                      time: valueOrDefault<String>(
+                                        dateTimeFormat(
+                                          "relative",
+                                          postsfeedPostsRecord.timePosted,
+                                          locale: FFLocalizations.of(context)
+                                              .languageCode,
+                                        ),
+                                        'Unknown time ago',
+                                      ),
+                                      postTitle: valueOrDefault<String>(
+                                        postsfeedPostsRecord.postTitle,
+                                        'Untitled',
+                                      ),
+                                      postCookTIme: valueOrDefault<double>(
+                                        postsfeedPostsRecord.postCookingTime,
+                                        5.0,
+                                      ),
+                                      postGrams: valueOrDefault<double>(
+                                        postsfeedPostsRecord.postWeight,
+                                        200.0,
+                                      ),
+                                      rating: postsfeedPostsRecord.rating,
+                                      postPhotoPath:
+                                          postsfeedPostsRecord.postPhoto,
+                                      numLikes: valueOrDefault<String>(
+                                        formatNumber(
+                                          postsfeedPostsRecord
+                                              .postLikedBy.length,
+                                          formatType: FormatType.compact,
+                                        ),
+                                        'No',
+                                      ),
+                                      likedPostRef:
+                                          postsfeedPostsRecord.reference,
+                                      numLikesQuery: postsfeedPostsRecord
+                                          .postLikedBy.length,
+                                      numComments: formatNumber(
+                                        postsfeedPostsRecord.numComments,
+                                        formatType: FormatType.compact,
+                                      ),
+                                      numCommentsQuery:
+                                          postsfeedPostsRecord.numComments,
+                                      isLiked: postsfeedPostsRecord.postLikedBy
+                                          .contains(currentUserReference),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          Opacity(
+                            opacity: 0,
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: FlutterFlowTheme.of(context)
+                                    .secondaryBackground,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                wrapWithModel(
+                  model: _model.bottomnavbarBeefModel,
+                  updateCallback: () => safeSetState(() {}),
+                  child: BottomnavbarBeefWidget(
+                    page: 'home',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
